@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Codenames AI</title>
+  <style>
+    body {
+      font-family: 'Roboto', arial, sans-serif;
+      font-size: 16px;
+    }
+
+    .small {
+      font-size: .8rem;
+    }
+
+    .mt-5 {
+      margin-top: 5px;
+    }
+
+    .pl-7 {
+      padding-left: 7px;
+    }
+
+    .code-container {
+      padding: 7px;
+    }
+
+    .code-input {
+      font-size: 1.1rem;
+      width: 150px;
+    }
+
+    .clear-link {
+      color: blue;
+      float: right;
+      position: relative;
+    }
+
+    .clear-link:hover {
+      cursor: pointer;
+    }
+
+    #suggest-btn {
+      display: block;
+      margin-left: 7px;
+      width: 75%;
+      border: none;
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      text-align: center;
+      border-radius: 5px;
+    }
+
+    #suggest-btn:hover {
+      background-color: #ddd;
+      color: black;
+    }
+
+    span.deleteicon {
+      position: relative;
+    }
+
+    .clear:after {
+      content: 'X';
+    }
+
+    span.deleteicon span {
+      position: absolute;
+      display: block;
+      top: 0px;
+      right: 0px;
+      width: 16px;
+      height: 0px;
+      cursor: pointer;
+    }
+
+    span.deleteicon input {
+      padding-right: 16px;
+      box-sizing: border-box;
+    }
+
+    .info-bubble {
+      padding: 5px;
+      border-radius: 50%;
+      background-color: #ccc;
+    }
+
+    .info-bubble:hover {
+      cursor: pointer;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      /* Hidden by default */
+      position: fixed;
+      /* Stay in place */
+      z-index: 1;
+      /* Sit on top */
+      padding-top: 10px;
+      /* Location of the box */
+      left: 0;
+      top: 0;
+      width: 100%;
+      /* Full width */
+      height: 100%;
+      /* Full height */
+      overflow-y: initial !important;
+      /* Enable scroll if needed */
+      background-color: rgb(0, 0, 0);
+      /* Fallback color */
+      background-color: rgba(0, 0, 0, 0.4);
+      /* Black w/ opacity */
+    }
+
+    /* Modal Content */
+    .modal-content {
+      background-color: #fefefe;
+      margin: auto;
+      padding: 0 10px 5px 5px;
+      border: 1px solid #888;
+      width: 90%;
+      height: 100%;
+    }
+
+    .modal-header {
+      margin-top: 10px;
+      padding: 4px;
+      width: 100%;
+      font-size: 1.3rem;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .modal-body {
+      margin-top: 10px;
+      height: 85%;
+      overflow-y: auto;
+    }
+
+    /* The Close Button */
+    .close {
+      color: #aaaaaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <h2 style="text-align: left; border-bottom:1px solid #ccc; margin-bottom:0;">Codenames AI</h2>
+  <p class="pl-7 mt-5 small">Powered by <a href="https://www.merriam-webster.com/thesaurus"
+      target="_blank">https://www.merriam-webster.com/thesaurus</a>.</p>
+
+
+  <div style="display:flex; flex-wrap: wrap; justify-content:left">
+    <div class="code-container">
+      <b>Code 1</b> <span id="code1-clue-container"></span> <br />
+      <span class="deleteicon">
+        <input class="code-input" type="text" id="code1">
+        <span class="clear"></span>
+      </span>
+    </div>
+
+    <div class="code-container">
+      <b>Code 2</b> <span id="code2-clue-container"></span><br />
+      <span class="deleteicon">
+        <input class="code-input" type="text" id="code2">
+        <span class="clear"></span>
+      </span>
+    </div>
+
+    <div class="code-container">
+      <b>Code 3</b> <span id="code3-clue-container"></span><br />
+      <span class="deleteicon">
+        <input class="code-input" type="text" id="code3">
+        <span class="clear"></span>
+      </span>
+    </div>
+
+    <div class="code-container">
+      <b>Code 4</b> <span id="code4-clue-container"></span><br />
+      <span class="deleteicon">
+        <input class="code-input" type="text" id="code4">
+        <span class="clear"></span>
+      </span>
+    </div>
+
+    <div class="code-container">
+      <b>Code 5</b> <span id="code5-clue-container"></span><br />
+      <span class="deleteicon">
+        <input class="code-input" type="text" id="code5">
+        <span class="clear"></span>
+      </span>
+    </div>
+
+    <div class="code-container">
+      <b>Code 6</b> <span id="code6-clue-container"></span><br />
+      <span class="deleteicon">
+        <input class="code-input" type="text" id="code6">
+        <span class="clear"></span>
+      </span>
+    </div>
+
+    <div class="code-container">
+      <b>Code 7</b> <span id="code7-clue-container"></span><br />
+      <span class="deleteicon">
+        <input class="code-input" type="text" id="code7">
+        <span class="clear"></span>
+      </span>
+    </div>
+
+    <div class="code-container">
+      <b>Code 8</b> <span id="code8-clue-container"></span><br />
+      <span class="deleteicon">
+        <input class="code-input" type="text" id="code8">
+        <span class="clear"></span>
+      </span>
+    </div>
+
+    <div class="code-container">
+      <b>Code 9</b> <span id="code9-clue-container"></span><br />
+      <span class="deleteicon">
+        <input class="code-input" type="text" id="code9">
+        <span class="clear"></span>
+      </span>
+    </div>
+  </div>
+
+  <button id="suggest-btn" type="button">Suggest</button>
+
+  
+  <div id="clues"></div>
+
+  <div id="templateModal" class="modal">
+    <div class="modal-content">
+      <div class="close">&times;</div>
+      <div class="modal-header">Modal Header</div>
+      <div class="modal-body">Some text in the Modal.</div>
+    </div>
+  </div>
+
+  <script type="module">
+    import lookupWord from './lookup-word.js';
+
+    initModals();
+    initInputClear();
+    initSuggest();
+
+    function initSuggest() {
+      document.getElementById('suggest-btn').addEventListener('click', suggestHandler, false);
+    }
+
+    async function suggestHandler() {
+      const wordData = [];
+
+      for (let i = 1; i < 10; i++) {
+        const code = document.getElementById('code' + i).value;
+        if (!isBlank(code)) {
+          const data = await lookupWord(code);
+          data.code = 'code' + i;
+          wordData.push(data);
+        }
+      }
+
+      wordData.forEach(wd => {
+        addInfoBubble(wd);
+      });
+
+      appendClues(wordData);
+    }
+
+    function appendClues(wordData) {
+      const clues = findClues(wordData);
+      let clueBody = "<h4 style='margin-bottom:0;'>Best Clues</h4>";
+
+      if (clues.length !== 0) {
+        clues.forEach(c => clueBody += `&ensp;* <b>${c.clue}</b> (clues for: ${c.codes})<br>`);
+      }
+      else {
+        clueBody += "<i>No clues found.  Looks like you're on your own!";
+      }
+      
+      document.getElementById('clues').innerHTML = clueBody;
+    }
+
+    function findClues(wordData) {
+      const clues = [];
+
+      wordData.forEach(wd => {
+        wd.info.forEach(i => {
+          i.definitions.forEach(def => {
+            def.synonyms.forEach(s => {
+              const clue = clues.find(c => c.clue === s);
+              if (!clue) {
+                clues.push({clue:s, codes:[wd.word]});
+              }
+              else {
+                if (!clue.codes.includes(wd.word)) {
+                  clue.codes.push(wd.word);
+                }
+              }
+            });
+          });
+        });
+      });
+
+      const bestClues = clues.filter(c => c.codes.length > 1);
+      return bestClues.sort((a,b) => a.codes.length < b.codes.length);
+    }
+
+    function addInfoBubble(wordData) {
+      const clueCount = countClueWords(wordData);
+      const modalId = `${wordData.code}-modal`;
+      const span = document.createElement("span");
+      span.innerHTML = clueCount;
+      span.className = 'info-bubble';
+      span.setAttribute('data-show', modalId);
+      document.getElementById(`${wordData.code}-clue-container`).appendChild(span);
+      createModal(modalId, wordData.word, getModalBody(wordData));
+    }
+
+    function getModalBody(wordData) {
+      let body = "";
+      wordData.info.forEach(i => {
+        i.definitions.forEach(def => {
+          body += `<b>${def.definition}</b><br>`;
+          body += '&ensp;<i>Synonyms</i><br/>';
+          def.synonyms.forEach(s => body += `&ensp;&ensp;* ${s}<br>`);
+          body += '&ensp;<i>Related Words</i><br>';
+          def.relatedWords.forEach(rw => body += `&ensp;&ensp;* ${rw}<br>`);
+          body += '<br>';
+        });
+      });
+      return body;
+    }
+
+    function countClueWords(wordData) {
+      let total = 0;
+      wordData.info.forEach(i => {
+        i.definitions.forEach(def => {
+          total += def.synonyms.length + def.relatedWords.length;
+        })
+      });
+      return total;
+    }
+
+    function isBlank(str) {
+      return str === undefined || str.replace(/\s/g, '') === '';
+    }
+
+    function createModal(id, header, body) {
+      // const existingModal = document.getElementById(id);
+      // if (existingModal) {
+      //   empty(existingModal);
+      // }
+
+      const modal = document.getElementById('templateModal').cloneNode(true);
+      modal.id = id;
+      modal.querySelectorAll('.modal-header')[0].innerHTML = header;
+      modal.querySelectorAll('.modal-body')[0].innerHTML = body;
+      document.body.appendChild(modal);
+    }
+
+    // http://youmightnotneedjquery.com/
+    function onClick(elementSelector, handler) {
+      document.addEventListener('click', function (e) {
+        // loop parent nodes from the target to the delegation node
+        for (var target = e.target; target && target != this; target = target.parentNode) {
+          if (target.matches(elementSelector)) {
+            handler.call(target, e);
+            break;
+          }
+        }
+      }, false);
+    }
+
+    function empty(el) {
+      while (el.firstChild) {
+        el.removeChild(el.firstChild);
+      }
+    }
+
+    function initInputClear() {
+      document.querySelectorAll('.clear').forEach(el => {
+        el.addEventListener('click', function () {
+          const input = this.previousSibling.previousSibling;
+          input.value = '';
+          input.focus();
+        });
+      })
+    }
+
+    function initModals() {
+      onClick('[data-show]', showModal);
+      onClick('.close', hideModal);
+    }
+
+    function showModal() {
+      const modal = document.getElementById(this.getAttribute('data-show'));
+      modal.style.display = "block";
+    }
+
+    function hideModal() {
+      const modal = this.parentNode.parentNode;
+      modal.style.display = "none";
+    }
+  </script>
+</body>
+
+</html>

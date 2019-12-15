@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  
+  <script type="module">
+    // ES6/ES2015
+    // app.js
+    import lookupWord from './lookup-word.js';
+
+    lookupWord('fidget');
+
+    </script>
+
+<!--
+  <script type="module">
+    // ES6/ES2015
+    // app.js
+    import data from './m-w-result.js';
+    //console.log(def); // output 'testing'
+
+    const jsonData = data.data;
+
+    // let i=0;
+    // jsonData.forEach(function(item) {
+    //   console.log(item);
+
+    //   // getting the sseq array (no rename)
+    //   const {def:[{sseq}]} = item;
+    //   console.log(sseq);
+
+
+    //   // getting the sseq array renamed test2
+    //   const {def:[{sseq: test2}]} = item;
+    //   console.log(test2);
+
+
+
+
+    //   // getting the array with sense as first item
+    //   const {def:[{sseq: [[arr1]]}]} = item;
+    //   console.log(arr1);
+
+
+    //   // getting the array with sense as first item
+    //   const {def:[{sseq:[[[sense,wordInfo]]]}]} = item;
+
+    //   console.log(i++);
+    //   console.log(wordInfo);
+
+    // });
+
+
+
+
+
+    ///////////////////////////////////////////////////
+    
+
+      // // getting the array with sense as first item
+      // const [{def:[{sseq:[[[sense,wordInfo]]]}]}] = jsonData;
+
+      
+      // console.log(wordInfo);
+
+  
+      const [{def:[{sseq}]}] = jsonData;
+     // console.log(sseq);
+
+      sseq.forEach(it => {
+        // it = [['sense', {dt:[], rel_list:[], syn_list:[]}]]
+
+        // console.log(it);
+
+        const [[sense, {dt:[[text, def]], rel_list:relatedWords, syn_list:synonyms} ]] = it;
+
+        const wordInfo = {
+          word: 'sing',
+          definition: def,
+          synonyms: getWdVals(synonyms),
+          relatedWords: getWdVals(relatedWords)
+        };
+
+        //THIS WORKS GREAT! -> console.log(wordInfo);
+
+        // console.log(def);
+        // console.log(relatedWords);
+        // console.log(synonyms);
+      });
+    
+      function getWdVals(arr) {
+        // arr is [[{wd:'word1', wd: 'word2'}]]
+
+        if (arr) {
+          const wordObjArr = arr[0];
+          return wordObjArr.map(obj => obj.wd);
+        }
+
+        return [];
+      }
+
+     
+
+  </script>
+  -->
+</body>
+</html>
