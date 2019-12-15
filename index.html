@@ -45,7 +45,7 @@
 
     #suggest-btn {
       display: block;
-      margin-left: 7px;
+      margin-left: 25px;
       width: 75%;
       border: none;
       background-color: #4CAF50;
@@ -157,6 +157,9 @@
       text-decoration: none;
       cursor: pointer;
     }
+    .hidden {
+      display:none;
+    }
   </style>
 </head>
 
@@ -242,9 +245,8 @@
     </div>
   </div>
 
-  <button id="suggest-btn" type="button">Suggest</button>
+  <button id="suggest-btn" type="button">Suggest <img id='suggest-spinner' class='hidden' src="ajax-loader.gif"/></button>
 
-  
   <div id="clues"></div>
 
   <div id="templateModal" class="modal">
@@ -267,6 +269,7 @@
     }
 
     async function suggestHandler() {
+      document.getElementById('suggest-spinner').className = '';
       const wordData = [];
 
       for (let i = 1; i < 10; i++) {
@@ -281,6 +284,8 @@
       wordData.forEach(wd => {
         addInfoBubble(wd);
       });
+
+      document.getElementById('suggest-spinner').className = 'hidden';
 
       appendClues(wordData);
     }
